@@ -1,0 +1,250 @@
+<html>
+	<!--
+	This site is powered by TDLive's TJS framework, available as gratis and libre 
+	(CC BY-NC-SA: http://tdlive.org/lic) from http://tjs.tdlive.org/.
+	
+	This and anything past this can be deleted so that the page is minified.
+	
+	=============================================================================
+	
+	Site owners: the configuration is the last function in the JavaScript section.
+		Here is the definition of all of the config settings:
+	
+	Setting: name
+	Possible value types: string, number
+	Description: The name of your site.
+	Example:
+		name = "TDLive TJS";
+	
+	Setting: avatarenabled (alpha)
+	Possible value types: boolean
+	Description: Put a logo on your site?
+	Example:
+		avatarenabled = true;
+	
+	Setting: avatarurl (optional- only if avatarenabled is true)
+	Possible value types: string
+	Description: The URL (or base64, if you desire) of the logo.
+	Example:
+		avatarurl = "http://example.com/mylogo.png"
+	
+	================================================================================
+	
+	Now comes the fun part. Hacking!
+	
+	This is a manual to every function in TJS. These can be run through Firebug or
+		the "Inspect Element" window in Firefox/Chrome. Note that this will only 
+		affect your local computer, so you can't show the vandalism you've caused
+		with your friends :)
+	
+	Function: c()
+	Parameters: TEXT, URL_OF_OWNER
+	Description: Will change the copyright text at the bottom to the owner TEXT and
+		the link will point to URL_OF_OWNER.
+	Example:
+		c("Ima Fraud", "http://example.com");
+	
+	Function: n()
+	Parameters: none
+	Description: Shows basic help.
+	Example:
+		n();
+	
+	Function: r()
+	Parameters: URL, TITLE
+	Description: Shows a redirect page. NOTE: You shouldn't call this to make links;
+		you should call nel (New External Link) and have it generate one for you. See
+		nel() below for more info.
+	Example:
+		r("http://creativecommons.org/", "Creative Commons");
+		
+	Function: ps()
+	Parameters: PAGEID
+	Description: Gets the PAGEID's source. NOTE: You shouldn't call this to change
+		pages; you should call p() and have it change for you. See p() for more
+		info.
+	Example:
+		ps("about");
+	
+	Function: p()
+	Parameters: PAGEID
+	Description: Changes the current page to PAGEID.
+	Example:
+		p("about");
+	
+	Function: pt()
+	Parameters: none
+	Description: Changes the cursor to a pointer. Not intended for non-navbar calls.
+	Example:
+		pt();
+	
+	Function: de()
+	Parameters: none
+	Description: Changes to the default cursor. Not intended for non-navbar calls.
+	Example:
+		de();
+		
+	Function: nel()
+	Parameters: URL, TEXT_TO_SHOW
+	Description: Returns text to use as a link. Intended to implement r() in a user-
+		friendly way.
+	Example:
+		"I <3 " + nel("http://minecraft.net/", "Minecraft") + ".";
+	
+	Function: cs()
+	Parameters: none
+	Description: Meant to be shown instead of the context box to show the HTML code.
+		Comment out from "START CS" to "END CS" to disable. Not intended for non-builtin
+		calls.
+	Example:
+		cs();
+	
+	Function: init()
+	Parameters: none
+	Description: Function that's run on page load. Not intended for after the page has
+		loaded.
+	Example:
+		init();
+	
+	====================================================================================
+	
+	I hope you enjoy TJS!
+	TDLive
+	-->
+	<head>
+	<link href='http://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css' />
+	<link href='http://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css' />
+	<link href='http://fonts.googleapis.com/css?family=Squada+One' rel='stylesheet' type='text/css' />
+	<script type="text/javascript" src="http://b0rg.tdlive.org/jquery.js"></script>
+	<script type="text/javascript">
+	function n(){
+		console.log("You're using the console? That's great!");
+		console.log("You can switch pages by calling p('PAGE')");
+		console.log("You can change the copyright by calling c('NAME_OF_HOLDER', 'URL') with no URL for the current site.");
+	}
+	function r(url, title){
+		console.log("Triggering a redirect to " + title + " (" + url + ")...");
+		quot = '"';
+		$("#content").html("<p align='center'><center><h3>You're leaving " + name + "!</h3><br>You'll be redirected to <a href='" + url + "'>" + title + "</a> in 5 seconds. Here's a preview of the site just to make sure you know where you're going:<br><iframe src='" + url + "' height=200 width=" + $(window).width() + " border=0></iframe><br><br><a style='color:red;' href=''>No, wait, I want to go back!</a>");
+		console.log("Done!");
+		setTimeout(function(){ window.location = url; }, 5000);
+		return true;
+	}
+	function ps(page, src){
+		if(page == "home") return "This is a sample TJS site. Change the code in ps() to change the text!";
+		else return "<h1>WHAT THE HECK ARE YOU TALKING ABOUT?!?</h1>The page you're looking for doesn't exist.";
+	}
+	function c(name, url){
+		quot = '"';
+		if(! url == ""){
+			$("#copyright").html("&copy;2012 <a href='javascript:r(" + quot + url + quot + ", " + quot + name + quot + ");'>" + name + "</a>.");
+		}
+		else{
+			$("#copyright").html("&copy;2012 <a href=''>" + name + "</a>.");
+		}
+	}
+	function p(page, auto){
+		if(! auto){
+			console.log("Attempting to switch to page " + page + "...");
+		}
+		document.title = name + " | " + page;
+		src=ps(page);
+		c(name, "");
+		/* add special page exceptions here */
+		/* if(page == "tjs-framework"){ //if tjs-framework is called
+			c("TDLive TJS", ""); //change to copyright to TDLive TJS of the current URL
+			r("http://tjs.tdlive.org/", "TDLive"); //redirect to http://tjs.tdlive.org/ with the title "TDLive"
+		} 
+		else { */
+		$("#content").html(src);
+		/* } */
+		if(! auto){
+			console.log("Switched!");
+		}
+	}
+	function pt(){
+		document.body.style.cursor = 'pointer';
+	}
+	function de(){
+		document.body.style.cursor = 'default';
+	}
+	function nel(url, text){
+		quot='"';
+		/* new external link */
+		return "<a href='" + url + "' onClick='r("+quot+url+quot+", "+quot+text+quot+"); return false;'>"+text+"</a>";
+	}
+	//START CS
+	/*
+	function cs(src){ //this just shows the HTML of the page or the option to debug with firebug instead of running a context menu; disable if you'd like, it won't break anything.
+		$("#content").html("<p align='center'><center><h1>Looking for the HTML?</h1>Here it is!!!!<br><textarea height=500 width=500>" + src + "</textarea><br>or you can debug the page using Firebug by clicking <a onClick='cf()'>here</a></p></center>");
+	}
+	document.oncontextmenu = function() { cs(src); return false; }
+	//firebug lite
+	function cfb(F,i,r,e,b,u,g,L,I,T,E){if(F.getElementById(b))return;E=F[i+'NS']&&F.documentElement.namespaceURI;E=E?F[i+'NS'](E,'script'):F[i]('script');E[r]('id',b);E[r]('src',I+g+T);E[r](b,u);(F[e]('head')[0]||F[e]('body')[0]).appendChild(E);E=new Image;E[r]('src',I+L); n();}
+	function cf(){cfb(document,'createElement','setAttribute','getElementsByTagName','FirebugLite','4','firebug-lite.js','releases/lite/latest/skin/xp/sprite.png','https://getfirebug.com/','#startOpened'); } 
+	//end firebug
+	*/
+	//END CS
+	function init(){
+	n();
+	/* Configuration */
+	name = "TDLive TJS";
+	avatarenabled = false; /* enable an avatar at the top right (still testing)?
+	avatarurl = "http://b0rg.tdlive.org/get/?user=bigk60"; /* url of avatar (if enabled) */
+	/* End Config */
+	if(avatarenabled){
+		$("#avvy").html("<img src='" + avatarurl + "' alt='" + name + "'></img>");
+	}
+	help = "p(<PAGE>): Switch pages; c(<NAME_OF_HOLDER>, <URL>) change copyright holder, leave URL empty for Divide By Zero; r(site_name, url) redirects to site_name.";
+	$("#header").html(name);
+	document.title = name;
+	p("home", true);
+	}
+	</script>
+	<style type="text/css">
+		#page{
+			align:left;
+		}
+		#navbar_about {
+			color:green;
+		}
+		#navbar {
+			align:right;
+		}
+		#copyright {
+			align:center;
+		}
+	</style>
+		<title>
+		</title>
+	</head>
+	<body onLoad="init();">
+		<div id="page">
+			<font face="Pontano Sans">
+			<a onClick="p('home');" onMouseOver="pt();" onMouseOut="de();">
+			<h1>
+			<div id="header">
+			</div>
+			</h1>
+			</a>
+			</h1>
+			</font>
+		</div>
+		<div id="navbar" align="right">
+			<font face="Happy Monkey">
+			<b>
+			<!-- this is the formula for page links! --><u><a onClick="p('home');" style="color: green;" onMouseOver="pt();" onMouseOut="de();">home</a></u>
+			</b>
+			</font>
+		</div>
+		<font face="Squada One">
+		<div id="content">
+			Please enable JavaScript to use this site.
+		</div>
+		</font>
+		<div id="copyright" align="center">
+			Please enable JavaScript to use this site.<br>
+		</div>
+		<p align="center"><center>Powered by the <a href="http://tjs.tdlive.org/">TDLive TJS framework</a>.</p></center>
+	</body>
+</html>
